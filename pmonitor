@@ -1,6 +1,8 @@
 #!/bin/bash
 
 pmonitor_file=/tmp/.pmonitor.me
+while true
+do
 while read line
 do
     count=0
@@ -22,3 +24,5 @@ do
     new_pid=$!
     sed -e "s/\d+\s${commend}/${pid} ${commend}/g" $pmonitor_file
 done < $pmonitor_file
+sleep 120
+done
