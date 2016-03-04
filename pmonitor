@@ -1,0 +1,24 @@
+#!/bin/bash
+
+pmonitor_file=/tmp/.pmonitor.me
+while read line
+do
+    count=0
+    for token in $line
+    do
+        if [ $count -eq 0 ];then
+            pid=$token
+            count=count+1
+        fi
+        commend=$token
+    done
+
+    ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
+    $c_pid=$?
+    if [ $c_pid -eq 0 ];then
+       continue
+    fi
+    eval $commend
+    new_pid=$!
+    sed -e "s/\d+\s${commend}/${pid} ${commend}/g" $pmonitor_file
+done < $pmonitor_file

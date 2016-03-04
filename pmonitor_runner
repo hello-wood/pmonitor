@@ -1,0 +1,27 @@
+#!/bin/bash
+
+pmonitor_file=/tmp/.pmonitor.me
+if [ $# -lt 1 ];then
+    echo "Usage:"
+    echo "      nohup_run.sh < program start commend >"
+fi
+
+run_commend="nohup"
+for param in $*
+do 
+    run_commend="$run_commend $param"
+done
+
+cat $pmonitor_file | grep $run_commend
+$exist=$?
+if [ $exist -eq 0 ];then
+    echo "error:this program exist!!!"
+    echo "      only one process allow per program"
+    exit
+fi
+
+eval $run_commend
+pid=$!
+echo "$pid $run_commend" >> $pmonitor_file
+
+
