@@ -27,7 +27,7 @@ do
     fi
     eval "$commend"
     new_pid=$!
-    sed -e "s/\d+\s${commend}/${pid} ${commend}/g" $pmonitor_file
+    sed -i "s/\d+\s${commend}/${pid} ${commend}/g" $pmonitor_file
 done < $pmonitor_file
 sleep 120
 done
