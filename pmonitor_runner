@@ -28,7 +28,7 @@ if [ $exist -eq 0 ];then
     echo $pid
 
     ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
-    $c_pid=$?
+    c_pid=$?
     if [ $c_pid -eq 0 ];then
         echo "error:this program exist!!!"
         echo "      only one process allow per program"

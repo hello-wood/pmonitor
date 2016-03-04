@@ -8,13 +8,13 @@ do
     do
         if [ $count -eq 0 ];then
             pid=$token
-            count=count+1
+            count=$count+1
         fi
         commend=$token
     done
 
     ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
-    $c_pid=$?
+    c_pid=$?
     if [ $c_pid -eq 0 ];then
        continue
     fi
