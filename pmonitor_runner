@@ -13,7 +13,7 @@ do
 done
 
 cat $pmonitor_file | grep $run_commend
-$exist=$?
+exist=$?
 if [ $exist -eq 0 ];then
     echo "error:this program exist!!!"
     echo "      only one process allow per program"
