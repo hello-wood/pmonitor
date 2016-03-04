@@ -19,9 +19,21 @@ run_commend="$run_commend &"
 cat $pmonitor_file | grep "${run_commend}"
 exist=$?
 if [ $exist -eq 0 ];then
-    echo "error:this program exist!!!"
-    echo "      only one process allow per program"
-    exit
+    line=`cat $pmonitor_file | grep "${run_commend}"`
+    for token in $line
+    do
+        pid=token
+        break
+    done
+
+    ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
+    $c_pid=$?
+    if [ $c_pid -eq 0 ];then
+        echo "error:this program exist!!!"
+        echo "      only one process allow per program"
+        exit
+    fi
+    sed -i "/{$pid}/d" $pmonitor_file
 fi
 
 eval $run_commend
