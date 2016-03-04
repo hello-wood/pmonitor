@@ -20,7 +20,7 @@ do
     if [ $c_pid -eq 0 ];then
        continue
     fi
-    eval $commend
+    eval "$commend"
     new_pid=$!
     sed -e "s/\d+\s${commend}/${pid} ${commend}/g" $pmonitor_file
 done < $pmonitor_file
