@@ -11,8 +11,13 @@ do
         if [ $count == 0 ];then
             pid=$token
             count=$count+1
+            continue
         fi
-        commend=$token
+        if [$count == 1 ];then
+            commend=$token
+            continue
+        fi
+        commend="$commend $token"
     done
 
     ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
