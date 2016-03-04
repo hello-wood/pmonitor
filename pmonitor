@@ -13,7 +13,7 @@ do
             count=$count+1
             continue
         fi
-        if [$count == 1 ];then
+        if [ $count == 1 ];then
             commend=$token
             continue
         fi
@@ -27,7 +27,7 @@ do
     fi
     eval "$commend"
     new_pid=$!
-    sed -i "s/\d+\s${commend}/${pid} ${commend}/g" $pmonitor_file
+    sed -i "s/${pid}/${new_pid}/g" $pmonitor_file
 done < $pmonitor_file
 sleep 120
 done
