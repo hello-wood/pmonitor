@@ -6,7 +6,7 @@ do
     count=0
     for token in $line
     do
-        if [ $count -eq 0 ];then
+        if [ $count == 0 ];then
             pid=$token
             count=$count+1
         fi
