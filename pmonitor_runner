@@ -22,7 +22,7 @@ if [ $exist -eq 0 ];then
     line=`cat $pmonitor_file | grep "${run_commend}"`
     for token in $line
     do
-        pid=token
+        pid=$token
         break
     done
     echo $pid
