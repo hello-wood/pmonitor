@@ -25,6 +25,7 @@ if [ $exist -eq 0 ];then
         pid=token
         break
     done
+    echo $pid
 
     ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
     $c_pid=$?
