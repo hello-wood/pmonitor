@@ -11,6 +11,7 @@ for param in $*
 do 
     run_commend="$run_commend $param"
 done
+run_commend="$run_commend &"
 
 cat $pmonitor_file | grep $run_commend
 exist=$?
