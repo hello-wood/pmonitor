@@ -3,6 +3,8 @@ pmonitor_file=/tmp/.pmonitor.me
 
 #define fun
 function monitor(){
+while true
+do
     while read line
     do
         comment=""
@@ -23,17 +25,18 @@ function monitor(){
 
         ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
         c_pid=$?
-        if [ $c_pid -eq 0 ];then
+        if [ $c_pid -eq 0 ] || [ $comment == "" ];then
            continue
         fi
         
-        if [ $comment == "" ];then
-           continue
-        fi
+        echo "$commend"
         eval "$commend"
         new_pid=$!
         sed -i "s/${pid}/${new_pid}/g" $pmonitor_file
+        sleep 1
     done < $pmonitor_file
+    sleep 20
+done
 }
 
 function runp(){
@@ -78,11 +81,7 @@ if [ ! -f $pmonitor_file ];then
 fi
 
 if [ "$1" == "pmonitor" ];then
-    while true
-    do
-        monitor
-        sleep 120
-    done
+    monitor
 else
     run_commend="nohup"
     for param in $*
