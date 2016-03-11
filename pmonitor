@@ -5,6 +5,7 @@ pmonitor_file=/tmp/.pmonitor.me
 function monitor(){
     while read line
     do
+        comment=""
         count=0
         for token in $line
         do
@@ -23,6 +24,10 @@ function monitor(){
         ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
         c_pid=$?
         if [ $c_pid -eq 0 ];then
+           continue
+        fi
+        
+        if [ $comment == "" ];then
            continue
         fi
         eval "$commend"
@@ -56,6 +61,7 @@ function runp(){
         sed -i "/{$pid}/d" $pmonitor_file
     fi
 
+    echo "running $run_commend"
     eval $run_commend
     pid=$!
     echo "$pid $run_commend" >> $pmonitor_file
@@ -84,9 +90,9 @@ else
         run_commend="$run_commend $param"
     done
     run_commend="$run_commend &"
-    runp $run_commend
+    runp "$run_commend"
 
-    if [ $is_first_time -eq 1 ];then
+    if [ "$is_first_time" == "1" ];then
         nohup pmonitor pmonitor &
     fi
 fi
