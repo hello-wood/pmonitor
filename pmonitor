@@ -23,16 +23,12 @@ do
             commend="$commend $token"
         done
 
-        c_pid=`ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"`
+        $c_pid=`ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"`
         if test -z "$c_pid";then
-           continue
+            eval "$commend"
+            new_pid=$!
+            sed -i "s/${pid}/${new_pid}/g" $pmonitor_file
         fi
-        
-        echo "$commend"
-        eval "$commend"
-        new_pid=$!
-        sed -i "s/${pid}/${new_pid}/g" $pmonitor_file
-        sleep 1
     done < $pmonitor_file
     sleep 20
 done
