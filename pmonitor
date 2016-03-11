@@ -23,7 +23,7 @@ do
             commend="$commend $token"
         done
 
-        $c_pid=`ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"`
+        c_pid=`ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"`
         if test -z "$c_pid";then
            continue
         fi
