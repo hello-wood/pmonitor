@@ -25,7 +25,7 @@ do
 
         ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
         c_pid=$?
-        if [ $c_pid -eq 0 ] || [ $comment == "" ];then
+        if [ $c_pid -eq 0 ] || [ "$comment" == "" ];then
            continue
         fi
         
