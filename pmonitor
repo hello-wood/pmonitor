@@ -7,10 +7,11 @@ while true
 do
     while read line
     do
-        comment=""
+        commend=""
         count=0
         for token in $line
         do
+            echo "$commend"
             if [ $count == 0 ];then
                 pid=$token
                 count=$count+1
