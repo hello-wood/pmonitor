@@ -18,7 +18,7 @@ while true
 do
     while read line
     do
-        comment=""
+        commend=""
         count=0
         for token in $line
         do
@@ -58,7 +58,6 @@ function runp(){
             pid=$token
             break
         done
-        echo $pid
 
         is_process_exist $pid
         if [ $? -eq 1 ];then
