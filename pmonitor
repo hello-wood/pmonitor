@@ -1,7 +1,18 @@
 #!/bin/bash
-pmonitor_file=/tmp/.pmonitor.me
+pmonitor_file=/var/pmonitor/.pmonitor.me
+pmonitor_pid_file=/var/pmonitor/.pmonitor.pid
 
 #define fun
+function is_process_exist(){
+    pid=$1
+    c_pid=`ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"`
+    if test -z "$c_pid";then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function monitor(){
 while true
 do
@@ -17,14 +28,14 @@ do
                 continue
             fi
             if [ $count == 1 ];then
-                commend=$token
+                commend="$token"
                 continue
             fi
             commend="$commend $token"
         done
 
-        c_pid=`ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"`
-        if test -z "$c_pid";then
+        is_process_exist $pid
+        if [ $? -eq 0 ];then
             eval "$commend"
             new_pid=$!
             sed -i "s/${pid}/${new_pid}/g" $pmonitor_file
@@ -49,9 +60,8 @@ function runp(){
         done
         echo $pid
 
-        ps -ax | awk '{ print $1  }' | grep -e "^${pid}$"
-        c_pid=$?
-        if [ $c_pid -eq 0 ];then
+        is_process_exist $pid
+        if [ $? -eq 1 ];then
             echo "error:this program exist!!!"
             echo "      only one process allow per program"
             exit
@@ -67,15 +77,31 @@ function runp(){
 
 if [ $# -lt 1 ];then
     echo "Usage:"
-    echo "      nohup_run.sh < program start commend >"
+    echo "       pmonitor monitor                 ---------- start monitor"
+    echo "       pmonitor <program start commend> ---------- add program to monitor"
 fi
 
-if [ ! -f $pmonitor_file ];then
-    is_first_time=1
+if [ ! -d "/var/pmonitor" ];then
+    mkdir /var/pmonitor
+fi
+
+if [ ! -f $pmonitor_pid_file ];then
+    eval "nohup pmonitor monitor &"
+    pid=$!
+    echo "$pid" > $pmonitor_pid_file
     touch $pmonitor_file
+else
+    read monitor_pid < $pmonitor_pid_file
+    is_process_exist $monitor_pid
+    if [ $? -eq 0 ];then
+        eval "nohup pmonitor monitor &"
+        pid=$!
+        echo "$pid" > $pmonitor_pid_file
+        touch $pmonitor_file
+    fi
 fi
 
-if [ "$1" == "pmonitor" ];then
+if [ "$1" == "monitor" ];then
     monitor
 else
     run_commend="nohup"
@@ -85,8 +111,4 @@ else
     done
     run_commend="$run_commend &"
     runp "$run_commend"
-
-    if [ "$is_first_time" == "1" ];then
-        nohup pmonitor pmonitor &
-    fi
 fi
